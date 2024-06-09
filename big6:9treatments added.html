@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beauty Is Green</title>
+    <style>
+        /* General styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            transition: background-color 0.3s, color 0.3s, font-family 0.3s;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .list-group {
+            list-style: none;
+            padding: 0;
+        }
+        .list-group li {
+            margin-bottom: 10px;
+        }
+        .cross-ref {
+            margin-top: 20px;
+        }
+        .toggle-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .toggle-button {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        /* Style classes */
+        .style-1 {
+            background: linear-gradient(135deg, #a8e063, #56ab2f);
+            color: white;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+        .style-1 .toggle-button {
+            background-color: #56ab2f;
+            color: white;
+        }
+        .style-2 {
+            background: linear-gradient(135deg, #fbc2eb, #a6c1ee);
+            color: #333;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .style-2 .toggle-button {
+            background-color: #a6c1ee;
+            color: #333;
+        }
+        .style-3 {
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: black;
+            font-family: 'Georgia', serif;
+        }
+        .style-3 .toggle-button {
+            background-color: #fad0c4;
+            color: black;
+        }
+        .default-bg {
+            background-color: white;
+            color: black;
+        }
+    </style>
+</head>
+<body class="default-bg">
+    <h1>Beauty Is Green</h1>
+    <div class="toggle-container">
+        <button class="toggle-button" onclick="toggleStyle()">Toggle Style</button>
+    </div>
+    <div class="container">
+        <!-- Form groups for input fields -->
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name">
+            <input type="file" id="nameFile">
+        </div>
+        <div class="form-group">
+            <label for="scientificName">Scientific Name:</label>
+            <input type="text" id="scientificName">
+        </div>
+        <div class="form-group">
+            <label for="herb">Herb:</label>
+            <input type="text" id="herb">
+            <input type="file" id="herbFile">
+        </div>
+        <div class="form-group">
+            <label for="ailment">Ailment:</label>
+            <input type="text" id="ailment">
+            <input type="file" id="ailmentFile">
+        </div>
+        <div class="form-group">
+            <label for="properties">Properties:</label>
+            <input type="text" id="properties">
+            <input type="file" id="propertiesFile">
+        </div>
+        <div class="form-group">
+            <label for="benefits">Benefits:</label>
+            <input type="text" id="benefits">
+            <input type="file" id="benefitsFile">
+        </div>
+        <div class="form-group">
+            <label for="herbsProven">Herbs Proven:</label>
+            <input type="text" id="herbsProven">
+            <input type="file" id="herbsProvenFile">
+        </div>
+        <div class="form-group">
+            <label for="herbsPresumed">Herbs Presumed:</label>
+            <input type="text" id="herbsPresumed">
+            <input type="file" id="herbsPresumedFile">
+        </div>
+        <div class="form-group">
+            <label for="treatments">Treatments:</label>
+            <input type="text" id="treatments">
+            <input type="file" id="treatmentsFile">
+        </div>
+        <div class="form-group">
+            <label for="possibleCauses">Possible Causes:</label>
+            <input type="text" id="possibleCauses">
+            <input type="file" id="possibleCausesFile">
+        </div>
+        <div class="form-group">
+            <label for="recipes">Recipes:</label>
+            <input type="text" id="recipes">
+            <input type="file" id="recipesFile">
+        </div>
+        <div class="form-group">
+            <label for="sideEffects">Side Effects:</label>
+            <input type="text" id="sideEffects">
+            <input type="file" id="sideEffectsFile">
+        </div>
+        <div class="form-group">
+            <label for="vitamins">Vitamins:</label>
+            <input type="text" id="vitamins">
+            <input type="file" id="vitaminsFile">
+        </div>
+        <div class="form-group">
+            <label for="funFacts">Fun Facts:</label>
+            <input type="text" id="funFacts">
+            <input type="file" id="funFactsFile">
+        </div>
+        <div class="form-group">
+            <label for="phytochemicals">Phytochemicals:</label>
+            <input type="text" id="phytochemicals">
+            <input type="file" id="phytochemicalsFile">
+        </div>
+        <div class="form-group">
+            <label for="numerology">Numerology:</label>
+            <input type="text" id="numerology">
+            <input type="file" id="numerologyFile">
+        </div>
+        <div class="form-group">
+            <label for="pressurePoints">Pressure Points:</label>
+            <input type="text" id="pressurePoints">
+            <input type="file" id="pressurePointsFile">
+        </div>
+        <div class="form-group">
+            <label for="notes">Notes:</label>
+            <input type="text" id="notes">
+            <input type="file" id="notesFile">
+        </div>
+        <button onclick="addOrUpdateEntry()">Add/Update Entry</button>
+        <button onclick="downloadData()">Download Data</button>
+        <input type="file" id="uploadFile" multiple>
+        <button onclick="uploadData()">Upload</button>
+        <button onclick="alphabetizeEntries()">Alphabetize Entries</button>
+        <h2>Entries</h2>
+        <ul class="list-group" id="entryList"></ul>
+        <h2>Cross Reference</h2>
+        <div class="form-group">
+            <label for="crossRefInput">Cross Reference by any Category:</label>
+            <input type="text" id="crossRefInput" oninput="crossReference()">
+        </div>
+        <ul class="list-group cross-ref" id="crossRefList"></ul>
+    </div>
+
+    <script>
+        let entries = JSON.parse(localStorage.getItem('entries')) || [];
+        let currentStyle = 0;
+        const styles = ['default-bg', 'style-1', 'style-2', 'style-3'];
+        let currentIndex = null;
+
+        function addOrUpdateEntry() {
+            const name = document.getElementById('name').value;
+            const scientificName = document.getElementById('scientificName').value;
+            const herb = document.getElementById('herb').value;
+            const ailment = document.getElementById('ailment').value;
+            const properties = document.getElementById('properties').value;
+            const benefits = document.getElementById('benefits').value;
+            const herbsProven = document.getElementById('herbsProven').value;
+            const herbsPresumed = document.getElementById('herbsPresumed').value;
+            const treatments = document.getElementById('treatments').value;
+            const possibleCauses = document.getElementById('possibleCauses').value;
+            const recipes = document.getElementById('recipes').value;
+            const sideEffects = document.getElementById('sideEffects').value;
+            const vitamins = document.getElementById('vitamins').value;
+            const funFacts = document.getElementById('funFacts').value;
+            const phytochemicals = document.getElementById('phytochemicals').value;
+            const numerology = document.getElementById('numerology').value;
+            const pressurePoints = document.getElementById('pressurePoints').value;
+            const notes = document.getElementById('notes').value;
+
+            const nameFile = getFileUrl(document.getElementById('nameFile'));
+            const herbFile = getFileUrl(document.getElementById('herbFile'));
+            const ailmentFile = getFileUrl(document.getElementById('ailmentFile'));
+            const propertiesFile = getFileUrl(document.getElementById('propertiesFile'));
+            const benefitsFile = getFileUrl(document.getElementById('benefitsFile'));
+            const herbsProvenFile = getFileUrl(document.getElementById('herbsProvenFile'));
+            const herbsPresumedFile = getFileUrl(document.getElementById('herbsPresumedFile'));
+            const treatmentsFile = getFileUrl(document.getElementById('treatmentsFile'));
+            const possibleCausesFile = getFileUrl(document.getElementById('possibleCausesFile'));
+            const recipesFile = getFileUrl(document.getElementById('recipesFile'));
+            const sideEffectsFile = getFileUrl(document.getElementById('sideEffectsFile'));
+            const vitaminsFile = getFileUrl(document.getElementById('vitaminsFile'));
+            const funFactsFile = getFileUrl(document.getElementById('funFactsFile'));
+            const phytochemicalsFile = getFileUrl(document.getElementById('phytochemicalsFile'));
+            const numerologyFile = getFileUrl(document.getElementById('numerologyFile'));
+            const pressurePointsFile = getFileUrl(document.getElementById('pressurePointsFile'));
+            const notesFile = getFileUrl(document.getElementById('notesFile'));
+
+            const entry = {
+                name, scientificName, herb, ailment, properties, benefits,
+                herbsProven, herbsPresumed, treatments, possibleCauses, recipes, sideEffects,
+                vitamins, funFacts, phytochemicals, numerology, pressurePoints, notes,
+                nameFile, herbFile, ailmentFile, propertiesFile, benefitsFile,
+                herbsProvenFile, herbsPresumedFile, treatmentsFile, possibleCausesFile, recipesFile,
+                sideEffectsFile, vitaminsFile, funFactsFile, phytochemicalsFile, numerologyFile,
+                pressurePointsFile, notesFile
+            };
+
+            if (currentIndex !== null) {
+                entries[currentIndex] = entry;
+                currentIndex = null;
+            } else {
+                entries.push(entry);
+            }
+            localStorage.setItem('entries', JSON.stringify(entries));
+            displayEntries();
+        }
+
+        function getFileUrl(fileInput) {
+            if (fileInput.files.length > 0) {
+                return URL.createObjectURL(fileInput.files[0]);
+            }
+            return null;
+        }
+
+        function displayEntries() {
+            const entryList = document.getElementById('entryList');
+            entryList.innerHTML = '';
+            entries.forEach((entry, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>Name:</strong> ${entry.name} <br>
+                    <strong>Scientific Name:</strong> ${entry.scientificName} <br>
+                    <strong>Herb:</strong> ${entry.herb} <br>
+                    <strong>Ailment:</strong> ${entry.ailment} <br>
+                    <strong>Properties:</strong> ${entry.properties} <br>
+                    <strong>Benefits:</strong> ${entry.benefits} <br>
+                    <strong>Herbs Proven:</strong> ${entry.herbsProven} <br>
+                    <strong>Herbs Presumed:</strong> ${entry.herbsPresumed} <br>
+                    <strong>Treatments:</strong> ${entry.treatments} <br>
+                    <strong>Possible Causes:</strong> ${entry.possibleCauses} <br>
+                    <strong>Recipes:</strong> ${entry.recipes} <br>
+                    <strong>Side Effects:</strong> ${entry.sideEffects} <br>
+                    <strong>Vitamins:</strong> ${entry.vitamins} <br>
+                    <strong>Fun Facts:</strong> ${entry.funFacts} <br>
+                    <strong>Phytochemicals:</strong> ${entry.phytochemicals} <br>
+                    <strong>Numerology:</strong> ${entry.numerology} <br>
+                    <strong>Pressure Points:</strong> ${entry.pressurePoints} <br>
+                    <strong>Notes:</strong> ${entry.notes} <br>
+                    <button onclick="editEntry(${index})">Edit</button>
+                    <button onclick="deleteEntry(${index})">Delete</button>
+                `;
+                entryList.appendChild(li);
+            });
+        }
+
+        function editEntry(index) {
+            const entry = entries[index];
+            document.getElementById('name').value = entry.name;
+            document.getElementById('scientificName').value = entry.scientificName;
+            document.getElementById('herb').value = entry.herb;
+            document.getElementById('ailment').value = entry.ailment;
+            document.getElementById('properties').value = entry.properties;
+            document.getElementById('benefits').value = entry.benefits;
+            document.getElementById('herbsProven').value = entry.herbsProven;
+            document.getElementById('herbsPresumed').value = entry.herbsPresumed;
+            document.getElementById('treatments').value = entry.treatments;
+            document.getElementById('possibleCauses').value = entry.possibleCauses;
+            document.getElementById('recipes').value = entry.recipes;
+            document.getElementById('sideEffects').value = entry.sideEffects;
+            document.getElementById('vitamins').value = entry.vitamins;
+            document.getElementById('funFacts').value = entry.funFacts;
+            document.getElementById('phytochemicals').value = entry.phytochemicals;
+            document.getElementById('numerology').value = entry.numerology;
+            document.getElementById('pressurePoints').value = entry.pressurePoints;
+            document.getElementById('notes').value = entry.notes;
+
+            currentIndex = index;
+        }
+
+        function deleteEntry(index) {
+            entries.splice(index, 1);
+            localStorage.setItem('entries', JSON.stringify(entries));
+            displayEntries();
+        }
+
+        function downloadData() {
+            const dataStr = JSON.stringify(entries, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            const exportFileDefaultName = 'data.json';
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        function uploadData() {
+            const files = document.getElementById('uploadFile').files;
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                const uploadedData = JSON.parse(event.target.result);
+                entries = entries.concat(uploadedData); // Append the uploaded data to the existing entries
+                localStorage.setItem('entries', JSON.stringify(entries));
+                displayEntries();
+            };
+
+            if (files.length > 0) {
+                reader.readAsText(files[0]);
+            }
+        }
+
+        function crossReference() {
+            const input = document.getElementById('crossRefInput').value.toLowerCase();
+            const crossRefList = document.getElementById('crossRefList');
+            crossRefList.innerHTML = '';
+
+            const filteredEntries = entries.filter(entry => {
+                return Object.values(entry).some(value => value && value.toLowerCase().includes(input));
+            });
+
+            filteredEntries.forEach(entry => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <strong>Name:</strong> ${entry.name} <br>
+                    <strong>Scientific Name:</strong> ${entry.scientificName} <br>
+                    <strong>Herb:</strong> ${entry.herb} <br>
+                    <strong>Ailment:</strong> ${entry.ailment} <br>
+                    <strong>Properties:</strong> ${entry.properties} <br>
+                    <strong>Benefits:</strong> ${entry.benefits} <br>
+                    <strong>Herbs Proven:</strong> ${entry.herbsProven} <br>
+                    <strong>Herbs Presumed:</strong> ${entry.herbsPresumed} <br>
+                    <strong>Treatments:</strong> ${entry.treatments} <br>
+                    <strong>Possible Causes:</strong> ${entry.possibleCauses} <br>
+                    <strong>Recipes:</strong> ${entry.recipes} <br>
+                    <strong>Side Effects:</strong> ${entry.sideEffects} <br>
+                    <strong>Vitamins:</strong> ${entry.vitamins} <br>
+                    <strong>Fun Facts:</strong> ${entry.funFacts} <br>
+                    <strong>Phytochemicals:</strong> ${entry.phytochemicals} <br>
+                    <strong>Numerology:</strong> ${entry.numerology} <br>
+                    <strong>Pressure Points:</strong> ${entry.pressurePoints} <br>
+                    <strong>Notes:</strong> ${entry.notes}
+                `;
+                crossRefList.appendChild(li);
+            });
+        }
+
+        function alphabetizeEntries() {
+            entries.sort((a, b) => a.name.localeCompare(b.name));
+            localStorage.setItem('entries', JSON.stringify(entries));
+            displayEntries();
+        }
+
+        function toggleStyle() {
+            document.body.classList.remove(...styles);
+            currentStyle = (currentStyle + 1) % styles.length;
+            document.body.classList.add(styles[currentStyle]);
+        }
+
+        window.onload = displayEntries;
+    </script>
+</body>
+</html>
