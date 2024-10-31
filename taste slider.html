@@ -1,0 +1,29 @@
+<div class="form-group">
+    <label for="taste">Taste:</label>
+    <div id="taste">
+        <label><input type="checkbox" class="taste-checkbox" value="sweet"> Sweet</label>
+        <input type="range" id="sweet-potency" class="potency-slider" value="0" min="0" max="100" disabled> <br>
+
+        <label><input type="checkbox" class="taste-checkbox" value="salty"> Salty</label>
+        <input type="range" id="salty-potency" class="potency-slider" value="0" min="0" max="100" disabled> <br>
+
+        <label><input type="checkbox" class="taste-checkbox" value="sour"> Sour</label>
+        <input type="range" id="sour-potency" class="potency-slider" value="0" min="0" max="100" disabled> <br>
+
+        <label><input type="checkbox" class="taste-checkbox" value="bitter"> Bitter</label>
+        <input type="range" id="bitter-potency" class="potency-slider" value="0" min="0" max="100" disabled> <br>
+
+        <label><input type="checkbox" class="taste-checkbox" value="umami"> Umami/Savory</label>
+        <input type="range" id="umami-potency" class="potency-slider" value="0" min="0" max="100" disabled> <br>
+    </div>
+</div>
+
+<script>
+    const tasteCheckboxes = document.querySelectorAll('.taste-checkbox');
+    tasteCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const slider = document.getElementById(`${this.value}-potency`);
+            slider.disabled = !this.checked;
+        });
+    });
+</script>
