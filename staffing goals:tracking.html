@@ -112,7 +112,8 @@
                         <strong>End Time:</strong> ${taskData.timeEnd}<br>
                         <strong>Pay Rate:</strong> $${taskData.payRate} (${taskData.payType})<br>
                         <strong>Assigned To:</strong> ${taskData.staff}<br>
-                        <strong>Estimated Pay:</strong> $${estimatedPay}<br><hr>
+                        <strong>Estimated Pay:</strong> $${estimatedPay}<br>
+                        <button onclick="editTask('${key}')">Edit</button><br><hr>
                     `;
                     scheduleContainer.appendChild(taskElement);
                 }
@@ -135,6 +136,19 @@
             const now = new Date();
             now.setHours(hours, minutes, 0, 0);
             return now;
+        }
+
+        function editTask(key) {
+            const taskData = JSON.parse(localStorage.getItem(key));
+
+            document.getElementById('task').value = taskData.task;
+            document.getElementById('time-start').value = taskData.timeStart;
+            document.getElementById('time-end').value = taskData.timeEnd;
+            document.getElementById('pay-rate').value = taskData.payRate;
+            document.getElementById('pay-type').value = taskData.payType;
+            document.getElementById('staff').value = taskData.staff;
+
+            localStorage.removeItem(key);
         }
 
         document.addEventListener('DOMContentLoaded', displayTasks);
