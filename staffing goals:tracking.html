@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Assignment and Pay Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .task, .goal {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .completed {
+            background-color: #d4edda;
+            text-decoration: line-through;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            background-color: #4caf50;
+            width: 0;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task Assignment and Pay Tracker</h1>
+
+    <div>
+        <h2>Add Task</h2>
+        <form id="task-form">
+            <label for="task">Task:</label><br>
+            <input type="text" id="task" name="task" required><br>
+            <label for="time-start">Start Time:</label><br>
+            <input type="time" id="time-start" name="time-start" required><br>
+            <label for="time-end">End Time:</label><br>
+            <input type="time" id="time-end" name="time-end" required><br>
+            <label for="pay-rate">Pay Rate:</label><br>
+            <input type="number" id="pay-rate" name="pay-rate" required><br>
+            <label for="pay-type">Pay Type:</label><br>
+            <select id="pay-type" name="pay-type">
+                <option value="hourly">Hourly</option>
+                <option value="fixed">Fixed</option>
+            </select><br>
+            <label for="staff">Assign to:</label><br>
+            <select id="staff" name="staff">
+                <option value="staff1">Staff 1</option>
+                <option value="staff2">Staff 2</option>
+                <option value="staff3">Staff 3</option>
+            </select><br><br>
+            <button type="button" onclick="addTask()">Add Task</button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Today's Schedule</h2>
+        <div id="schedule-container"></div>
+    </div>
+
+    <script>
+        function addTask() {
+            const task = document.getElementById('task').value;
+            const timeStart = document.getElementById('time-start').value;
+            const timeEnd = document.getElementById('time-end').value;
+            const payRate = document.getElementById('pay-rate').value;
+            const payType = document.getElementById('pay-type').value;
+            const staff = document.getElementById('staff').value;
+
+            const taskData = {
+                task,
+                timeStart,
+                timeEnd,
+                payRate,
+                payType,
+                staff
+            };
+
+            localStorage.setItem(`task-${Date.now()}`, JSON.stringify(taskData));
+            displayTasks();
+
+            document.getElementById('task-form').reset();
+        }
+
+        function displayTasks() {
+            const scheduleContainer = document.getElementById('schedule-container');
+            scheduleContainer.innerHTML = '';
+
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('task-')) {
+                    const taskData = JSON.parse(localStorage.getItem(key));
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task';
+                    
+                    const estimatedPay = calculatePay(taskData);
+
+                    taskElement.innerHTML = `
+                        <strong>Task:</strong> ${taskData.task}<br>
+                        <strong>Start Time:</strong> ${taskData.timeStart}<br>
+                        <strong>End Time:</strong> ${taskData.timeEnd}<br>
+                        <strong>Pay Rate:</strong> $${taskData.payRate} (${taskData.payType})<br>
+                        <strong>Assigned To:</strong> ${taskData.staff}<br>
+                        <strong>Estimated Pay:</strong> $${estimatedPay}<br><hr>
+                    `;
+                    scheduleContainer.appendChild(taskElement);
+                }
+            });
+        }
+
+        function calculatePay(taskData) {
+            if (taskData.payType === 'hourly') {
+                const startTime = parseTime(taskData.timeStart);
+                const endTime = parseTime(taskData.timeEnd);
+                const hours = (endTime - startTime) / (1000 * 60 * 60);
+                return (hours * taskData.payRate).toFixed(2);
+            } else {
+                return taskData.payRate;
+            }
+        }
+
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const now = new Date();
+            now.setHours(hours, minutes, 0, 0);
+            return now;
+        }
+
+        document.addEventListener('DOMContentLoaded', displayTasks);
+    </script>
+</body>
+</html>
