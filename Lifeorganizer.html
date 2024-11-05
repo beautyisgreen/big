@@ -104,7 +104,7 @@
             position: absolute;
             top: 5px;
             right: 5px;
-            background-color: #ff6b6b;
+            background-color: #b0b0b0;
             color: white;
             border: none;
             border-radius: 5px;
@@ -113,7 +113,42 @@
         }
 
         .delete-widget:hover {
-            background-color: #ff4c4c;
+            background-color: #909090;
+        }
+
+        .menu-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: #a08650;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .menu-item {
+            margin: 10px 0;
+            cursor: pointer;
+            color: #5a5a5a;
+        }
+
+        .menu-item:hover {
+            text-decoration: underline;
         }
     </style>
     <script>
@@ -124,6 +159,10 @@
 
             if (email === 'niecey.gone.green@gmail.com' && password === '1234') {
                 document.body.innerHTML = `
+                    <button class="menu-button" onclick="toggleMenu()">Menu</button>
+                    <div class="menu">
+                        <div class="menu-item" onclick="addWidget()">Add Widget</div>
+                    </div>
                     <div class="welcome-container">
                         <h2 class="welcome-heading">Welcome to All of Me</h2>
                         <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
@@ -184,6 +223,25 @@
             event.stopPropagation();
             const widget = event.target.parentElement;
             widget.remove();
+        }
+
+        function toggleMenu() {
+            const menu = document.querySelector('.menu');
+            menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function addWidget() {
+            const welcomeContainer = document.querySelector('.welcome-container');
+            const newWidget = document.createElement('div');
+            newWidget.className = 'widget-box resizable';
+            newWidget.draggable = true;
+            newWidget.ondragstart = dragStart;
+            newWidget.innerHTML = `
+                New Widget
+                <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+            `;
+            welcomeContainer.appendChild(newWidget);
+            addDragAndDropFunctionality();
         }
     </script>
 </head>
