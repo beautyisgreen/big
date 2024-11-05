@@ -13,6 +13,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            overflow: hidden;
         }
 
         .container {
@@ -71,8 +72,16 @@
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 600px;
+            width: 90%;
+            max-width: 800px;
             text-align: center;
+            margin: 20px auto;
+        }
+
+        .welcome-heading {
+            color: #5a5a5a;
+            margin-bottom: 20px;
+            font-size: 2em;
         }
 
         .widget-box {
@@ -80,6 +89,31 @@
             border-radius: 10px;
             padding: 20px;
             margin: 10px 0;
+            width: calc(100% - 40px);
+            height: 100px;
+            cursor: move;
+            position: relative;
+        }
+
+        .widget-box.resizable {
+            resize: both;
+            overflow: auto;
+        }
+
+        .delete-widget {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        .delete-widget:hover {
+            background-color: #ff4c4c;
         }
     </style>
     <script>
@@ -91,17 +125,65 @@
             if (email === 'niecey.gone.green@gmail.com' && password === '1234') {
                 document.body.innerHTML = `
                     <div class="welcome-container">
-                        <h2>Welcome to All of Me</h2>
-                        <div class="widget-box">Widget Space 1</div>
-                        <div class="widget-box">Widget Space 2</div>
-                        <div class="widget-box">Widget Space 3</div>
-                        <div class="widget-box">Widget Space 4</div>
-                        <div class="widget-box">Widget Space 5</div>
+                        <h2 class="welcome-heading">Welcome to All of Me</h2>
+                        <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                            Widget Space 1
+                            <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                        </div>
+                        <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                            Widget Space 2
+                            <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                        </div>
+                        <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                            Widget Space 3
+                            <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                        </div>
+                        <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                            Widget Space 4
+                            <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                        </div>
+                        <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                            Widget Space 5
+                            <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                        </div>
                     </div>
                 `;
+                addDragAndDropFunctionality();
             } else {
                 alert('Invalid email or password');
             }
+        }
+
+        function dragStart(event) {
+            event.dataTransfer.setData("text/plain", event.target.id);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const id = event.dataTransfer.getData("text/plain");
+            const draggableElement = document.getElementById(id);
+            const dropzone = event.target;
+            dropzone.appendChild(draggableElement);
+            event.dataTransfer.clearData();
+        }
+
+        function addDragAndDropFunctionality() {
+            const widgetBoxes = document.querySelectorAll('.widget-box');
+            widgetBoxes.forEach((box, index) => {
+                box.id = `widget-${index + 1}`;
+                box.addEventListener('dragover', allowDrop);
+                box.addEventListener('drop', drop);
+            });
+        }
+
+        function deleteWidget(event) {
+            event.stopPropagation();
+            const widget = event.target.parentElement;
+            widget.remove();
         }
     </script>
 </head>
