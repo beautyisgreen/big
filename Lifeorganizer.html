@@ -297,6 +297,9 @@
                         <ul class="resource-list">
                             <li class="resource-list-item" onclick="selectResource('Daily Planner')">Daily Planner</li>
                         </ul>
+                        <button class="navigation-button" onclick="goBackToWidgets()">Back to Widgets</button>
+                        <button class="navigation-button" onclick="signOut()">Sign Out</button>
+                        <button class="navigation-button" onclick="undoLastAction()">Undo</button>
                     </div>
                     <div class="resource-main" id="resourceMain">
                         <h2>Select a Resource from the Sidebar</h2>
@@ -361,6 +364,10 @@
                     scheduleContainer.appendChild(taskElement);
                 }
             });
+        }
+    function undoLastAction() {
+            // This is a placeholder for undo functionality.
+            alert('Undo functionality not yet implemented.');
         }
     </script>
 </head>
