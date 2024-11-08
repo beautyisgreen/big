@@ -297,7 +297,7 @@
                         <ul class="resource-list">
                             <li class="resource-list-item" onclick="selectResource('Daily Planner')">Daily Planner</li>
                         </ul>
-                        <button class="navigation-button" onclick="goBackToWidgets()">Back to Widgets</button>
+                        <button class="navigation-button" onclick="goBackToWidgets()">All of Me</button>
                         <button class="navigation-button" onclick="signOut()">Sign Out</button>
                         <button class="navigation-button" onclick="undoLastAction()">Undo</button>
                     </div>
@@ -368,6 +368,56 @@
     function undoLastAction() {
             // This is a placeholder for undo functionality.
             alert('Undo functionality not yet implemented.');
+        }
+    function goBackToWidgets() {
+            // Navigate back to the Welcome to All of Me page
+            document.body.innerHTML = `
+                <button class="menu-button" onclick="toggleMenu()">Menu</button>
+                <div class="menu">
+                    <div class="menu-item" onclick="addWidget()">Add Widget</div>
+                    <div class="menu-item" onclick="openResourcePage()">Open Resources</div>
+                </div>
+                <div class="welcome-container">
+                    <h2 class="welcome-heading">Welcome to All of Me</h2>
+                    <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                        Widget Space 1
+                        <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                    </div>
+                    <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                        Widget Space 2
+                        <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                    </div>
+                    <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                        Widget Space 3
+                        <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                    </div>
+                    <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                        Widget Space 4
+                        <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                    </div>
+                    <div class="widget-box resizable" draggable="true" ondragstart="dragStart(event)">
+                        Widget Space 5
+                        <button class="delete-widget" onclick="deleteWidget(event)">X</button>
+                    </div>
+                </div>
+            `;
+            addDragAndDropFunctionality();
+        }
+    function signOut() {
+            // Navigate back to the login page
+            document.body.innerHTML = `
+                <div class="container">
+                    <h2>Login</h2>
+                    <form onsubmit="handleLogin(event)">
+                        <input type="email" id="email" placeholder="Email Address" required>
+                        <input type="password" id="password" placeholder="Password" required>
+                        <button type="submit">Login</button>
+                    </form>
+                    <div class="register-link">
+                        <p>Don't have an account? <a href="#">Create an Account</a></p>
+                    </div>
+                </div>
+            `;
         }
     </script>
 </head>
