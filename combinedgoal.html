@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Assignment and Pay Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            background-image: url('https://www.transparenttextures.com/patterns/old-wall.png');
+        }
+        .task, .goal {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-bottom: 10px;
+            position: relative;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .completed {
+            background-color: #d4edda;
+            text-decoration: line-through;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .progress-bar-fill {
+            height: 20px;
+            background-color: #4caf50;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="time"], input[type="number"] {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            font-size: 16px;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 10px;
+        }
+        select {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 20px;
+            outline: none;
+            font-size: 16px;
+            width: 100%;
+            max-width: 320px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #f8c8dc;
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #f3a6c4;
+        }
+        button .heart-icon {
+            font-size: 20px;
+            color: white;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <h1>Task Assignment and Pay Tracker</h1>
+
+    <div>
+        <h2>Today's Schedule</h2>
+        <div class="progress-bar">
+            <div id="progress-bar-fill" class="progress-bar-fill">0%</div>
+        </div>
+        <div id="schedule-container"></div>
+    </div>
+
+    <div>
+        <h2>Add Task</h2>
+        <form id="task-form">
+            <div class="input-container">
+                <input type="text" id="task" name="task" placeholder="Task" required>
+            </div>
+            <div class="input-container">
+                <input type="time" id="time-start" name="time-start" required>
+            </div>
+            <div class="input-container">
+                <input type="time" id="time-end" name="time-end" required>
+            </div>
+            <div class="input-container">
+                <input type="number" id="pay-rate" name="pay-rate" placeholder="Pay Rate" required>
+            </div>
+            <div class="input-container">
+                <select id="pay-type" name="pay-type">
+                    <option value="hourly">Hourly</option>
+                    <option value="fixed">Fixed</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <select id="staff" name="staff">
+                    <option value="staff1">Staff 1</option>
+                    <option value="staff2">Staff 2</option>
+                    <option value="staff3">Staff 3</option>
+                </select>
+            </div>
+            <button type="button" onclick="addTask()">
+                <i class="fas fa-plus heart-icon"></i>
+            </button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Add Goal</h2>
+        <form id="goal-form">
+            <div class="input-container">
+                <input type="text" id="goal" name="goal" placeholder="Goal" required>
+            </div>
+            <div class="input-container">
+                <input type="text" id="goal-description" name="goal-description" placeholder="Goal Description" required>
+            </div>
+            <div class="input-container">
+                <select id="goal-staff" name="goal-staff">
+                    <option value="staff1">Staff 1</option>
+                    <option value="staff2">Staff 2</option>
+                    <option value="staff3">Staff 3</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <select id="goal-tasks" name="goal-tasks">
+                    <option value="">Select a Task to Link</option>
+                </select>
+            </div>
+            <button type="button" onclick="addGoal()">
+                <i class="fas fa-plus heart-icon"></i>
+            </button>
+        </form>
+    </div>
+
+    <div>
+        <h2>Goals</h2>
+        <div id="goal-container"></div>
+    </div>
+
+    <script>
+        function addTask() {
+            const task = document.getElementById('task').value;
+            const timeStart = document.getElementById('time-start').value;
+            const timeEnd = document.getElementById('time-end').value;
+            const payRate = document.getElementById('pay-rate').value;
+            const payType = document.getElementById('pay-type').value;
+            const staff = document.getElementById('staff').value;
+
+            const taskData = {
+                task,
+                timeStart,
+                timeEnd,
+                payRate,
+                payType,
+                staff,
+                completed: false
+            };
+
+            localStorage.setItem(`task-${Date.now()}`, JSON.stringify(taskData));
+            displayTasks();
+            updateGoalTaskDropdown();
+
+            document.getElementById('task-form').reset();
+        }
+
+        function displayTasks() {
+            const scheduleContainer = document.getElementById('schedule-container');
+            scheduleContainer.innerHTML = '';
+            let totalTasks = 0;
+            let completedTasks = 0;
+
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('task-')) {
+                    totalTasks++;
+                    const taskData = JSON.parse(localStorage.getItem(key));
+                    const taskElement = document.createElement('div');
+                    taskElement.className = 'task';
+                    if (taskData.completed) {
+                        taskElement.classList.add('completed');
+                        completedTasks++;
+                    }
+                    
+                    const estimatedPay = calculatePay(taskData);
+
+                    taskElement.innerHTML = `
+                        <strong>Task:</strong> ${taskData.task}<br>
+                        <strong>Start Time:</strong> ${taskData.timeStart}<br>
+                        <strong>End Time:</strong> ${taskData.timeEnd}<br>
+                        <strong>Pay Rate:</strong> $${taskData.payRate} (${taskData.payType})<br>
+                        <strong>Assigned To:</strong> ${taskData.staff}<br>
+                        <strong>Estimated Pay:</strong> $${estimatedPay}<br>
+                        <button onclick="editTask('${key}')">Edit</button>
+                        <button onclick="deleteTask('${key}')">Delete</button>
+                        <button onclick="markTaskCompleted('${key}')">${taskData.completed ? 'Mark as Incomplete' : 'Mark as Completed'}</button><br><hr>
+                    `;
+                    scheduleContainer.appendChild(taskElement);
+                }
+            });
+
+            updateProgressBar(totalTasks, completedTasks);
+        }
+
+        function updateGoalTaskDropdown() {
+            const goalTasksDropdown = document.getElementById('goal-tasks');
+            goalTasksDropdown.innerHTML = '<option value="">Select a Task to Link</option>';
+
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('task-')) {
+                    const taskData = JSON.parse(localStorage.getItem(key));
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = taskData.task;
+                    goalTasksDropdown.appendChild(option);
+                }
+            });
+        }
+
+        function addGoal() {
+            const goal = document.getElementById('goal').value;
+            const goalDescription = document.getElementById('goal-description').value;
+            const staff = document.getElementById('goal-staff').value;
+            const linkedTaskKey = document.getElementById('goal-tasks').value;
+
+            const goalData = {
+                goal,
+                goalDescription,
+                staff,
+                linkedTaskKey,
+                tasks: []
+            };
+
+            localStorage.setItem(`goal-${Date.now()}`, JSON.stringify(goalData));
+            displayGoals();
+
+            document.getElementById('goal-form').reset();
+        }
+
+        function displayGoals() {
+            const goalContainer = document.getElementById('goal-container');
+            goalContainer.innerHTML = '';
+
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('goal-')) {
+                    const goalData = JSON.parse(localStorage.getItem(key));
+                    const goalElement = document.createElement('div');
+                    goalElement.className = 'goal';
+                    
+                    let linkedTask = '';
+                    if (goalData.linkedTaskKey && localStorage.getItem(goalData.linkedTaskKey)) {
+                        const taskData = JSON.parse(localStorage.getItem(goalData.linkedTaskKey));
+                        linkedTask = `<br><strong>Linked Task:</strong> ${taskData.task}`;
+                    }
+
+                    goalElement.innerHTML = `
+                        <strong>Goal:</strong> ${goalData.goal}<br>
+                        <strong>Description:</strong> ${goalData.goalDescription}<br>
+                        <strong>Assigned To:</strong> ${goalData.staff}${linkedTask}<br>
+                        <button onclick="addSubTask('${key}')">Add Sub-task</button>
+                        <button onclick="deleteGoal('${key}')">Delete Goal</button><br>
+                        <div id="subtask-container-${key}"></div><hr>
+                    `;
+                    goalContainer.appendChild(goalElement);
+
+                    displaySubTasks(key);
+                }
+            });
+        }
+
+        function deleteGoal(goalKey) {
+            localStorage.removeItem(goalKey);
+            displayGoals();
+        }
+
+        function addSubTask(goalKey) {
+            const subTask = prompt("Enter sub-task:");
+            const subTaskStaff = prompt("Assign sub-task to staff (staff1, staff2, staff3):");
+            if (!subTask || !subTaskStaff) return;
+
+            const goalData = JSON.parse(localStorage.getItem(goalKey));
+            goalData.tasks.push({ subTask, staff: subTaskStaff, completed: false });
+
+            localStorage.setItem(goalKey, JSON.stringify(goalData));
+            displayGoals();
+        }
+
+        function displaySubTasks(goalKey) {
+            const goalData = JSON.parse(localStorage.getItem(goalKey));
+            const subTaskContainer = document.getElementById(`subtask-container-${goalKey}`);
+            subTaskContainer.innerHTML = '';
+
+            goalData.tasks.forEach((task, index) => {
+                const subTaskElement = document.createElement('div');
+                subTaskElement.className = 'task';
+                if (task.completed) {
+                    subTaskElement.classList.add('completed');
+                }
+                
+                subTaskElement.innerHTML = `
+                    <strong>Sub-task:</strong> ${task.subTask}<br>
+                    <strong>Assigned To:</strong> ${task.staff}<br>
+                    <button onclick="markSubTaskCompleted('${goalKey}', ${index})">${task.completed ? 'Mark as Incomplete' : 'Mark as Completed'}</button>
+                    <button onclick="deleteSubTask('${goalKey}', ${index})">Delete</button><br>
+                `;
+                subTaskContainer.appendChild(subTaskElement);
+            });
+        }
+
+        function markSubTaskCompleted(goalKey, subTaskIndex) {
+            const goalData = JSON.parse(localStorage.getItem(goalKey));
+            goalData.tasks[subTaskIndex].completed = !goalData.tasks[subTaskIndex].completed;
+
+            localStorage.setItem(goalKey, JSON.stringify(goalData));
+            displayGoals();
+        }
+
+        function deleteSubTask(goalKey, subTaskIndex) {
+            const goalData = JSON.parse(localStorage.getItem(goalKey));
+            goalData.tasks.splice(subTaskIndex, 1);
+
+            localStorage.setItem(goalKey, JSON.stringify(goalData));
+            displayGoals();
+        }
+
+        function calculatePay(taskData) {
+            if (taskData.payType === 'hourly') {
+                const startTime = parseTime(taskData.timeStart);
+                const endTime = parseTime(taskData.timeEnd);
+                const hours = (endTime - startTime) / (1000 * 60 * 60);
+                return (hours * taskData.payRate).toFixed(2);
+            } else {
+                return taskData.payRate;
+            }
+        }
+
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            const now = new Date();
+            now.setHours(hours, minutes, 0, 0);
+            return now;
+        }
+
+        function editTask(key) {
+            const taskData = JSON.parse(localStorage.getItem(key));
+
+            document.getElementById('task').value = taskData.task;
+            document.getElementById('time-start').value = taskData.timeStart;
+            document.getElementById('time-end').value = taskData.timeEnd;
+            document.getElementById('pay-rate').value = taskData.payRate;
+            document.getElementById('pay-type').value = taskData.payType;
+            document.getElementById('staff').value = taskData.staff;
+
+            localStorage.removeItem(key);
+        }
+
+        function deleteTask(key) {
+            localStorage.removeItem(key);
+            displayTasks();
+            updateGoalTaskDropdown();
+        }
+
+        function markTaskCompleted(key) {
+            const taskData = JSON.parse(localStorage.getItem(key));
+            taskData.completed = !taskData.completed;
+            localStorage.setItem(key, JSON.stringify(taskData));
+            displayTasks();
+        }
+
+        function updateProgressBar(totalTasks, completedTasks) {
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const completionPercentage = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
+            progressBarFill.style.width = `${completionPercentage}%`;
+            progressBarFill.textContent = `${completionPercentage}%`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayTasks();
+            displayGoals();
+            updateGoalTaskDropdown();
+        });
+    </script>
+</body>
+</html>
