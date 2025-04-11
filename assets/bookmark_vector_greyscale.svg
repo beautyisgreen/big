@@ -1,0 +1,3 @@
+<div class="bookmark-toggle" onclick="toggleBookmark(this)">
+  <img src="/assets/bookmark_vector_greyscale.svg" alt="Bookmark" class="bookmark-icon">
+</div>
